@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -14,9 +14,17 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '8'
+          java-version: "8"
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter build apk
+          channel: "stable"
+        env:
+          KEY_JKS: ${{ secrets.KEY_JKS }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS}}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          run: echo $KEY_JKS > android/key.jks && flutter pub get && flutter build apk --split-per-abi
+      - uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: build/app/outputs/apk/release/
