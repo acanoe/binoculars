@@ -1,9 +1,8 @@
 name: Build APK
 
 on:
-  # Disabling it for now
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -25,7 +24,7 @@ jobs:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: base64 -d $KEY_JKS > android/key.jks && flutter pub get && flutter build apk --split-per-abi
+        run: echo "$KEY_JKS" | base64 -d > android/key.jks && flutter pub get && flutter build apk --split-per-abi
       - uses: actions/upload-artifact@v2
         with:
           name: release-apks
