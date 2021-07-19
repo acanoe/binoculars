@@ -25,9 +25,8 @@ jobs:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: echo $KEY_JKS > android/key.jks
-        # && flutter pub get && flutter build apk --split-per-abi
+        run: base64 -d $KEY_JKS > android/key.jks && flutter pub get && flutter build apk --split-per-abi
       - uses: actions/upload-artifact@v2
         with:
-          name: release-apk
-          path: "**"
+          name: release-apks
+          path: "build/app/outputs/apk/release/"
